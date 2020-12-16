@@ -107,6 +107,7 @@ class GameScene: SKScene {
             }
             hurtStanceArray.append(SKTexture(imageNamed: name))
         }
+        //Woot
     }
     
     //MARK: - Math Function (new stuff)
