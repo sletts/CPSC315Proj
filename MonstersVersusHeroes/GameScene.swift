@@ -240,6 +240,7 @@ class GameScene: SKScene {
                 enemyCharacter.run(SKAction.repeat(SKAction.animate(with: hurtStanceArray, timePerFrame: 0.05, resize: false, restore: true), count: 1))
             }
         }
+
     }
     
     override func update(_ currentTime: TimeInterval) {
