@@ -36,6 +36,10 @@ class GameScene: SKScene {
     var playerHP = 200
     var enemyHP = 200
     //Starts a timer, used to determine how quickly someone answers a question
+    var playerHealthBar = SKSpriteNode()
+    var enemyHealthBar = SKSpriteNode()
+    var backgroundHealthBar1 = SKSpriteNode()
+    var backgroundHealthBar2 = SKSpriteNode()
     func startTimer() {
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { (timer) in
                self.seconds += 1
@@ -149,6 +153,38 @@ class GameScene: SKScene {
         }
     }
     
+    func createHPBars(){
+        playerHealthBar = SKSpriteNode(color: .green, size: CGSize(width: playerHP/2, height: 15))
+        playerHealthBar.position = CGPoint(x: frame.minX + 60, y: playerLabel.position.y - self.size.width/20)
+        playerHealthBar.zPosition = 1
+        addChild(playerHealthBar)
+        
+        backgroundHealthBar1 = SKSpriteNode(color: .red, size: CGSize(width: 100, height: 15))
+        backgroundHealthBar1.position = CGPoint(x: frame.minX + 60, y: playerLabel.position.y - self.size.width/20)
+        backgroundHealthBar1.zPosition = 0
+        addChild(backgroundHealthBar1)
+        
+        enemyHealthBar = SKSpriteNode(color: .green, size: CGSize(width: enemyHP/2, height: 15))
+        enemyHealthBar.position = CGPoint(x: frame.maxX - 70, y: enemyLabel.position.y - self.size.width/20)
+        enemyHealthBar.zPosition = 1
+        addChild(enemyHealthBar)
+        
+        backgroundHealthBar2 = SKSpriteNode(color: .red, size: CGSize(width: 100, height: 15))
+        backgroundHealthBar2.position = CGPoint(x: frame.maxX - 70, y: enemyLabel.position.y - self.size.width/20)
+        backgroundHealthBar2.zPosition = 0
+        addChild(backgroundHealthBar2)
+        
+        backgroundHealthBar1.alpha = 0
+        backgroundHealthBar2.alpha = 0
+        playerHealthBar.alpha = 0
+        enemyHealthBar.alpha = 0
+    }
+    func updateHPBars(){
+        playerHealthBar.size = CGSize(width: playerHP/2, height: 15)
+        
+        enemyHealthBar.size = CGSize(width: enemyHP/2, height: 15)
+    }
+    
     //Creates everything at the beginning
     override func didMove(to view: SKView) {
         //MARK: - Texture Atlas Creation Calls
@@ -215,6 +251,8 @@ class GameScene: SKScene {
         playButton.alpha = 1
         playButton.zPosition = 1
         addChild(playButton)
+        
+        createHPBars()
     }
     
     //Useless function that didn't work
@@ -246,6 +284,11 @@ class GameScene: SKScene {
                             self.enemyLabel.text = "Enemy"
                             self.playerCharacter.alpha = 1.0
                             self.enemyCharacter.alpha = 1.0
+                            
+                            self.backgroundHealthBar1.alpha = 1
+                            self.backgroundHealthBar2.alpha = 1
+                            self.playerHealthBar.alpha = 1
+                            self.enemyHealthBar.alpha = 1
                         }))
                         self.view?.window?.rootViewController?.present(alert, animated: true)
                     }
@@ -311,8 +354,8 @@ class GameScene: SKScene {
                 else{
                     self.playerCharacter.run(SKAction.repeat(SKAction.animate(with: self.hurtStanceArray, timePerFrame: 0.05, resize: false, restore: true), count: 1))
                 }
-
             }
+            self.updateHPBars()
         }))
         self.view?.window?.rootViewController?.present(alert, animated: true)
     }
@@ -341,6 +384,11 @@ class GameScene: SKScene {
             self.enemyCharacter.alpha = 0
             self.playerHP = 200
             self.enemyHP = 200
+            
+            self.backgroundHealthBar1.alpha = 0
+            self.backgroundHealthBar2.alpha = 0
+            self.playerHealthBar.alpha = 0
+            self.enemyHealthBar.alpha = 0
         }))
         self.view?.window?.rootViewController?.present(alert, animated: true)
     }
