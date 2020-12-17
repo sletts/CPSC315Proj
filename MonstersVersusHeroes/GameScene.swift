@@ -10,12 +10,14 @@ import SpriteKit
 class GameScene: SKScene {
     
     //MARK: - MyLaebl and Math vars (new stuff)
-    var myLabel:SKLabelNode!
+    var playerLabel:SKLabelNode!
+    var enemyLabel:SKLabelNode!
     //set up math variables for math functions
     var rand1: Int = 0
     var rand2: Int = 0
     var answer: Int = 0
     var toPrint: String = ""
+    var operand: String = ""
     
     var idleStanceArray = [SKTexture]()
     var attackStanceArray = [SKTexture]()
@@ -31,12 +33,16 @@ class GameScene: SKScene {
     var timer: Timer? = nil
     var seconds: Int = 0
     
+    var playerHP = 200
+    var enemyHP = 200
+    //Starts a timer, used to determine how quickly someone answers a question
     func startTimer() {
-            timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { (timer) in
-                self.seconds += 1
-            })
-        }
-    
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { (timer) in
+               self.seconds += 1
+        })
+    }
+    //MARK: - Populates all of the SKTexture Arrays
+    //The function that populates the Idle movement array
     func createIdleMovement(){
         let textureAtlas = SKTextureAtlas(named: "MC_Idle")
         for x in 0...textureAtlas.textureNames.count - 1{
@@ -50,7 +56,7 @@ class GameScene: SKScene {
             idleStanceArray.append(SKTexture(imageNamed: name))
         }
     }
-    
+    //The function that populates the attack movement array
     func creatAttackMovement(){
         let textureAtlas = SKTextureAtlas(named: "MC_Attack")
         for x in 0...textureAtlas.textureNames.count - 1{
@@ -64,7 +70,7 @@ class GameScene: SKScene {
             attackStanceArray.append(SKTexture(imageNamed: name))
         }
     }
-    
+    //The function that populates the dying movement array
     func createDyingMovement(){
         let textureAtlas = SKTextureAtlas(named: "MC_Dying")
         for x in 0...textureAtlas.textureNames.count - 1{
@@ -78,7 +84,7 @@ class GameScene: SKScene {
             dyingStanceArray.append(SKTexture(imageNamed: name))
         }
     }
-    
+    //The function that populates the walking movement array
     func createWalkingMovement(){
         let textureAtlas = SKTextureAtlas(named: "MC_Walking")
         print(textureAtlas.textureNames.count)
@@ -93,7 +99,7 @@ class GameScene: SKScene {
             walkingStanceArray.append(SKTexture(imageNamed: name))
         }
     }
-    
+    //The function that populates the hurt movement array
     func createHurtMovement(){
         let textureAtlas = SKTextureAtlas(named: "MC_Hurt")
         print(textureAtlas.textureNames.count)
@@ -107,18 +113,14 @@ class GameScene: SKScene {
             }
             hurtStanceArray.append(SKTexture(imageNamed: name))
         }
-        //Woot
     }
     
-    //MARK: - Math Function (new stuff)
+    //MARK: - Math Function
     func mathProblems(){
         //set up possible math equation types
         let mathQuestionTypes = ["Add", "Subtract", "Multiply"]
         var questionType: String
         questionType = mathQuestionTypes.randomElement() ?? ""
-        //testing stuff
-        //questionType = "Multiply"
-        print(questionType)
 
         //based on math equation type, generate 2 random numbers and answer which combines them
         if (questionType == mathQuestionTypes[0]){ //addition
@@ -127,6 +129,7 @@ class GameScene: SKScene {
             answer = rand1 + rand2
             print("\(rand1)+\(rand2) = \(answer)")
             toPrint = "\(rand1)+\(rand2) = \(answer)"
+            operand = "+"
         }
         else if (questionType == mathQuestionTypes[1]){ //subtraction
             rand1 = Int(arc4random_uniform(UInt32(91)))+10
@@ -134,6 +137,7 @@ class GameScene: SKScene {
             answer = max(rand1,rand2) - min(rand1,rand2)
             print("\(max(rand1,rand2))-\(min(rand1,rand2)) = \(answer)")
             toPrint = "\(max(rand1,rand2))-\(min(rand1,rand2)) = \(answer)"
+            operand = "-"
         }
         else if (questionType == mathQuestionTypes[2]){ //multiplication
             rand1 = Int(arc4random_uniform(UInt32(12)))+1
@@ -141,20 +145,19 @@ class GameScene: SKScene {
             answer = rand1*rand2
             print("\(rand1)*\(rand2) = \(answer)")
             toPrint = "\(rand1)*\(rand2) = \(answer)"
+            operand = "*"
         }
     }
     
+    //Creates everything at the beginning
     override func didMove(to view: SKView) {
-        
-        //MARK: - Texture Atlas
+        //MARK: - Texture Atlas Creation Calls
         createIdleMovement()
         creatAttackMovement()
         createDyingMovement()
         createWalkingMovement()
         createHurtMovement()
         startTimer()
-        
-        mathProblems()
         
         //MARK: - BACKGROUND
         let background = SKSpriteNode(imageNamed: "BG_01")
@@ -163,14 +166,22 @@ class GameScene: SKScene {
         background.zPosition = -1
         addChild(background)
         
-        //MARK: - MyLabel (new stuff)
-        myLabel = SKLabelNode(fontNamed: "Arial-BoldMT")
-        myLabel.text = toPrint
-        myLabel.fontColor = SKColor.black
-        myLabel.fontSize = 50
-        myLabel.position = CGPoint(x: self.size.width/2, y: self.size.height/1.5)
+        //MARK: - Player & Enemy Labels
+        playerLabel = SKLabelNode(fontNamed: "Arial-BoldMT")
+        playerLabel.text = ""
+        playerLabel.fontColor = SKColor.black
+        playerLabel.fontSize = 35
+        playerLabel.position = CGPoint(x: frame.minX + self.size.width/5, y: frame.maxY - self.size.width/6)
                 
-        self.addChild(myLabel)
+        self.addChild(playerLabel)
+        
+        enemyLabel = SKLabelNode(fontNamed: "Arial-BoldMT")
+        enemyLabel.text = ""
+        enemyLabel.fontColor = SKColor.black
+        enemyLabel.fontSize = 35
+        enemyLabel.position = CGPoint(x: frame.maxX - self.size.width/5, y: frame.maxY - self.size.width/6)
+                
+        self.addChild(enemyLabel)
         
         //MARK: - Player Sprite
         playerCharacter = SKSpriteNode(imageNamed: "Golem_01_Idle_000")
@@ -206,25 +217,33 @@ class GameScene: SKScene {
         addChild(playButton)
     }
     
+    //Useless function that didn't work
+    //Why is it still here?
+    //To show an atempt at walking animation was given
+    /*
     func walkForward(player: SKSpriteNode){
         let playerWidth = playerCharacter.frame.width / 5
-        let playerHeight = playerCharacter.frame.height / 2
         playerCharacter.run(SKAction.repeat(SKAction.animate(with: walkingStanceArray, timePerFrame: 0.05, resize: false, restore: true), count: 1))
             while(playerCharacter.position.x < (frame.minX + playerWidth)){
                 playerCharacter.position = CGPoint(x: playerCharacter.position.x + 0.1, y: playerCharacter.position.y)
         }
     }
+    */
     
+    //Where all the magic happens
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        mathProblems()
         if(playButton.alpha > 0.0){
             for touch in touches{
                 let node = self.atPoint(touch.location(in :self))
                 let position = node.position
                 if(position.x == playButton.position.x){
                     if(position.y == playButton.position.y){
-                        let alert = UIAlertController(title: "Welcome!", message: "Hi there! This game is just meant to test your basic math ability while giving you a way to smash monsters to bits! \n Ready? \n Set.", preferredStyle: .alert)
+                        let alert = UIAlertController(title: "Welcome!", message: "Hi there! This game is just meant to test your basic math ability while giving you a way to smash monsters to bits! The faster you answer the more damge you do. Simple right? \n Ready? \n Set...", preferredStyle: .alert)
                         alert.addAction(UIAlertAction(title: "Go!", style: .default, handler: {action in
                             self.playButton.alpha = 0.0
+                            self.playerLabel.text = "Player"
+                            self.enemyLabel.text = "Enemy"
                             self.playerCharacter.alpha = 1.0
                             self.enemyCharacter.alpha = 1.0
                         }))
@@ -234,18 +253,96 @@ class GameScene: SKScene {
             }
         }
         else{
-            test = 0
-            if test==0{
-                playerCharacter.run(SKAction.repeat(SKAction.animate(with: attackStanceArray, timePerFrame: 0.05, resize: false, restore: true), count: 1))
-                //let animateStart = seconds
-                enemyCharacter.run(SKAction.repeat(SKAction.animate(with: hurtStanceArray, timePerFrame: 0.05, resize: false, restore: true), count: 1))
-            }
+            attemptAttackAlert()
         }
-
+    }
+    //Functions that exisit just cause I need functions
+    func endPlayer(){
+        playerCharacter.alpha = 0
+    }
+    func endEnemy(){
+        enemyCharacter.alpha = 0
     }
     
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
+    }
+    
+    func attemptAttackAlert(){
+        let startTime = seconds
+        var damage = 10
+        let alert = UIAlertController(title: "Swing!", message: "You're trying to attack? Quick! What's \n \(max(rand1,rand2)) \(operand) \(min(rand1,rand2))\n equal to?", preferredStyle: .alert)
+        alert.addTextField { (textField) in
+            textField.placeholder = "Answer goes here"
+        }
+        alert.addAction(UIAlertAction(title: "Hit!", style: .default, handler: {action in
+            let textfield = alert.textFields![0]
+            if(Int(textfield.text!) == self.answer){
+                var timeDif = self.seconds - startTime
+                if(timeDif < 10){
+                    timeDif = (timeDif - 10) * -1
+                    damage = damage * timeDif
+                    self.enemyHP -= damage
+                }
+                else{
+                    self.enemyHP -= damage
+                }
+                self.playerCharacter.run(SKAction.repeat(SKAction.animate(with: self.attackStanceArray, timePerFrame: 0.05, resize: false, restore: true), count: 1))
+                if (self.enemyHP <= 0){
+                    //If the enemy has no health left run the end of game alert
+                    self.enemyCharacter.run(SKAction.repeat(SKAction.animate(with: self.dyingStanceArray, timePerFrame: 0.05, resize: false, restore: true), count: 1), completion: self.endEnemy)
+                    self.endOfGameAlert(loser: false)
+                }
+                else{
+                    //Otherwise the enemy gets smacked
+                    self.enemyCharacter.run(SKAction.repeat(SKAction.animate(with: self.hurtStanceArray, timePerFrame: 0.05, resize: false, restore: true), count: 1))
+                }
+            }
+            else{
+                self.playerHP -= 25
+                self.enemyCharacter.run(SKAction.repeat(SKAction.animate(with: self.attackStanceArray, timePerFrame: 0.05, resize: false, restore: true), count: 1))
+                let alert = UIAlertController(title: "Miss!", message: "That's a shame \(max(self.rand1,self.rand2)) \(self.operand) \(min(self.rand1,self.rand2)) is actually equal to \(self.answer)", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Aw okay!", style: .default, handler: nil))
+                self.view?.window?.rootViewController?.present(alert, animated: true)
+                if(self.playerHP <= 0){
+                    self.playerCharacter.run(SKAction.repeat(SKAction.animate(with: self.dyingStanceArray, timePerFrame: 0.05, resize: false, restore: true), count: 1), completion: self.endPlayer)
+                    self.endOfGameAlert(loser: true)
+                }
+                else{
+                    self.playerCharacter.run(SKAction.repeat(SKAction.animate(with: self.hurtStanceArray, timePerFrame: 0.05, resize: false, restore: true), count: 1))
+                }
+
+            }
+        }))
+        self.view?.window?.rootViewController?.present(alert, animated: true)
+    }
+    
+    //The alert pop up that shows when either the player or enemy wins
+    func endOfGameAlert(loser: Bool){
+        var loserString = ""
+        if(loser){
+            loserString = "Looks like you lost. Shame about that."
+        }
+        else{
+            loserString = "Looks like you won, congrats!"
+        }
+        let alert = UIAlertController(title: "Next Fight", message: "\(loserString) Are you ready for your next fight?", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: {action in
+            //resets important data for next fight
+            self.enemyHP = 200
+            self.enemyCharacter.alpha = 1
+        }))
+        alert.addAction(UIAlertAction(title: "No", style: .default, handler: {action in
+            //resets data so that front screen can be seen properly
+            self.playButton.alpha = 1.0
+            self.playerLabel.text = ""
+            self.enemyLabel.text = ""
+            self.playerCharacter.alpha = 0
+            self.enemyCharacter.alpha = 0
+            self.playerHP = 200
+            self.enemyHP = 200
+        }))
+        self.view?.window?.rootViewController?.present(alert, animated: true)
     }
 
 }
