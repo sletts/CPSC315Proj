@@ -332,6 +332,7 @@ class GameScene: SKScene {
                 }
                 self.playerCharacter.run(SKAction.repeat(SKAction.animate(with: self.attackStanceArray, timePerFrame: 0.05, resize: false, restore: true), count: 1))
                 if (self.enemyHP <= 0){
+                    self.enemyHealthBar.alpha = 0
                     //If the enemy has no health left run the end of game alert
                     self.enemyCharacter.run(SKAction.repeat(SKAction.animate(with: self.dyingStanceArray, timePerFrame: 0.05, resize: false, restore: true), count: 1), completion: self.endEnemy)
                     self.endOfGameAlert(loser: false)
@@ -343,11 +344,13 @@ class GameScene: SKScene {
             }
             else{
                 self.playerHP -= 25
+                
                 self.enemyCharacter.run(SKAction.repeat(SKAction.animate(with: self.attackStanceArray, timePerFrame: 0.05, resize: false, restore: true), count: 1))
                 let alert = UIAlertController(title: "Miss!", message: "That's a shame \(max(self.rand1,self.rand2)) \(self.operand) \(min(self.rand1,self.rand2)) is actually equal to \(self.answer)", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "Aw okay!", style: .default, handler: nil))
                 self.view?.window?.rootViewController?.present(alert, animated: true)
                 if(self.playerHP <= 0){
+                    self.playerHealthBar.alpha = 0
                     self.playerCharacter.run(SKAction.repeat(SKAction.animate(with: self.dyingStanceArray, timePerFrame: 0.05, resize: false, restore: true), count: 1), completion: self.endPlayer)
                     self.endOfGameAlert(loser: true)
                 }
@@ -373,7 +376,10 @@ class GameScene: SKScene {
         alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: {action in
             //resets important data for next fight
             self.enemyHP = 200
+            self.playerHealthBar.alpha = 1
+            self.enemyHealthBar.alpha = 1
             self.enemyCharacter.alpha = 1
+            self.updateHPBars()
         }))
         alert.addAction(UIAlertAction(title: "No", style: .default, handler: {action in
             //resets data so that front screen can be seen properly
@@ -389,6 +395,7 @@ class GameScene: SKScene {
             self.backgroundHealthBar2.alpha = 0
             self.playerHealthBar.alpha = 0
             self.enemyHealthBar.alpha = 0
+            self.updateHPBars()
         }))
         self.view?.window?.rootViewController?.present(alert, animated: true)
     }
