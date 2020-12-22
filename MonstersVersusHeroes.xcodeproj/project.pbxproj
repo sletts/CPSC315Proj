@@ -17,7 +17,6 @@
 		FF78C4F1258ABA2D00400C3F /* MC_Attack.atlas in Resources */ = {isa = PBXBuildFile; fileRef = FF78C4F0258ABA2D00400C3F /* MC_Attack.atlas */; };
 		FF78C4F5258ABA3900400C3F /* MC_Dying.atlas in Resources */ = {isa = PBXBuildFile; fileRef = FF78C4F4258ABA3900400C3F /* MC_Dying.atlas */; };
 		FF78C4F9258ABA4100400C3F /* MC_Idle.atlas in Resources */ = {isa = PBXBuildFile; fileRef = FF78C4F8258ABA4100400C3F /* MC_Idle.atlas */; };
-		FF78C4FD258ABA8B00400C3F /* MC_Walking.atlas in Resources */ = {isa = PBXBuildFile; fileRef = FF78C4FC258ABA8B00400C3F /* MC_Walking.atlas */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,7 +32,6 @@
 		FF78C4F0258ABA2D00400C3F /* MC_Attack.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = MC_Attack.atlas; sourceTree = "<group>"; };
 		FF78C4F4258ABA3900400C3F /* MC_Dying.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = MC_Dying.atlas; sourceTree = "<group>"; };
 		FF78C4F8258ABA4100400C3F /* MC_Idle.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = MC_Idle.atlas; sourceTree = "<group>"; };
-		FF78C4FC258ABA8B00400C3F /* MC_Walking.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; name = MC_Walking.atlas; path = ../../MC_Walking.atlas; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,7 +64,6 @@
 		FF7716AE25759DB5001B7874 /* MonstersVersusHeroes */ = {
 			isa = PBXGroup;
 			children = (
-				FF78C4FC258ABA8B00400C3F /* MC_Walking.atlas */,
 				FF78C4F8258ABA4100400C3F /* MC_Idle.atlas */,
 				FF78C4F4258ABA3900400C3F /* MC_Dying.atlas */,
 				FF78C4F0258ABA2D00400C3F /* MC_Attack.atlas */,
@@ -146,7 +143,6 @@
 				FF78C4F9258ABA4100400C3F /* MC_Idle.atlas in Resources */,
 				FF7716B225759DB5001B7874 /* GameScene.sks in Resources */,
 				FF7716BD25759DB6001B7874 /* Assets.xcassets in Resources */,
-				FF78C4FD258ABA8B00400C3F /* MC_Walking.atlas in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
