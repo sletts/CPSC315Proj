@@ -24,7 +24,7 @@ class GameScene: SKScene {
     var idleStanceArray = [SKTexture]()
     var attackStanceArray = [SKTexture]()
     var dyingStanceArray = [SKTexture]()
-    var walkingStanceArray = [SKTexture]()//unused
+    //var walkingStanceArray = [SKTexture]()//unused
     var hurtStanceArray = [SKTexture]()
     
     //set up graphics
@@ -97,6 +97,7 @@ class GameScene: SKScene {
     }
     //The function that populates the walking movement array
     //unused
+    /*
     func createWalkingMovement(){
         let textureAtlas = SKTextureAtlas(named: "MC_Walking")
         print(textureAtlas.textureNames.count)
@@ -110,7 +111,7 @@ class GameScene: SKScene {
             }
             walkingStanceArray.append(SKTexture(imageNamed: name))
         }
-    }
+    }*/
     //The function that populates the hurt movement array
     func createHurtMovement(){
         let textureAtlas = SKTextureAtlas(named: "MC_Hurt")
@@ -208,7 +209,7 @@ class GameScene: SKScene {
         createIdleMovement()
         creatAttackMovement()
         createDyingMovement()
-        createWalkingMovement()
+        //createWalkingMovement() //unused
         createHurtMovement()
         startTimer()
         
